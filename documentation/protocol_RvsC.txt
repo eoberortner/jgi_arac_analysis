@@ -1,0 +1,86 @@
+
+cd ~/DataAnalysis/jgi_arac_analysis
+
+##
+## RETRIEVE THE RAW READS
+##
+
+module load jamo
+
+mkdir -p reads
+
+cd reads/
+
+jamo fetch library M4683
+## After this command, wait for some minutes!!
+## mostly, JAMO is reloading the requested library and FASTQ file
+ln -s /global/dna/dm_archive/sdm/illumina/00/82/09/8209.1.92779.ACTCGTCGGTA.fastq.gz M4683.fastq.gz
+
+jamo fetch library M4684
+ln -s /global/dna/dm_archive/sdm/illumina/00/82/09/8209.1.92779.AGCGTGTCCAA.fastq.gz M4684.fastq.gz
+
+jamo fetch library M4689
+ln -s /global/dna/dm_archive/sdm/illumina/00/82/09/8209.1.92779.ACGCTATCTGG.fastq.gz M4689.fastq.gz
+
+jamo fetch library M4690
+ln -s /global/dna/dm_archive/sdm/illumina/00/82/09/8209.1.92779.AAGTGGACTCT.fastq.gz M4690.fastq.gz
+
+jamo fetch library M6607
+ls -s /global/dna/dm_archive/sdm/illumina/00/87/14/8714.1.108688.CGATGTCGTCA.fastq.gz M6607.fastq.gz
+
+jamo fetch library M6608
+ln -s /global/dna/dm_archive/sdm/illumina/00/87/14/8714.1.108688.GCACGTTCTAA.fastq.gz M6608.fastq.gz
+
+jamo fetch library M6609
+ln -s /global/dna/dm_archive/sdm/illumina/00/87/14/8714.1.108688.CTATGTGAACC.fastq.gz M6609.fastq.gz
+
+jamo fetch library M6610
+ln -s /global/dna/dm_archive/sdm/illumina/00/87/14/8714.1.108688.TAAGGCCTATC.fastq.gz M6610.fastq.gz
+
+
+cd ..
+
+##
+## PERFORM THE ALIGNMENTS
+##
+
+mkdir -p aligned
+
+## M4683
+export samp=M4683
+/bin/sh alignment.sh
+
+## M4684
+export samp=M4684
+/bin/sh alignment.sh
+
+## M4689
+export samp=M4689
+/bin/sh alignment.sh
+
+## M4690
+export samp=M4690
+/bin/sh alignment.sh
+
+## M6607
+export samp=M6607
+/bin/sh alignment.sh
+
+## M6608
+export samp=M6608
+/bin/sh alignment.sh
+
+## M6608
+export samp=M6609
+/bin/sh alignment.sh
+
+## M6610
+export samp=M6610
+/bin/sh alignment.sh
+
+##
+## BINNING
+## of all libraries that are specified in the analysis_RvsC.py script
+## 
+python src/analysis_RvsC.py ref/reference.fasta
+python src/filter_RvsC.py ref/reference.fasta
