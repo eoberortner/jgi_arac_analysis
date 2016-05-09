@@ -105,8 +105,8 @@ if __name__ == '__main__':
         
         print >>sys.stdout, "[----- filtering -----]"
         
-        ## key ... 6-mer
-        ## value ... list of values
+        ## key ... AA sequence
+        ## value ... 
         ##           [count, 'C'/'R']
         bins = {}
         
@@ -123,14 +123,19 @@ if __name__ == '__main__':
 
                 aa_sequence = elements[0].strip()
                 count = elements[1].strip()
+                type = elements[2].strip()
                 haplotype = elements[3].strip()
                 
-                if haplotype in bins and elements[2] == 'R':
-                    bins[haplotype][0] += int(count)
-                else:
-                    bins[haplotype] = []
-                    bins[haplotype].append(int(count))
-                    bins[haplotype].append(elements[2])
+                if elements[2] == 'R':
+                    
+                    if haplotype != wildtype:
+                        ## real random
+                        type = 'C'
+
+                bins[aa_sequence] = []
+                bins[aa_sequence].append(int(count))
+                bins[aa_sequence].append(type)     ## R/C
+                bins[aa_sequence].append(haplotype)
 
         ## serialize the bins to a CSV file
         print >>sys.stdout, "[----- generating filtered CSV -----]"
@@ -144,7 +149,7 @@ if __name__ == '__main__':
         
         for entry in sorted_bins:
   
-            print >>filtered_csv_file, '{},{},{}'.format(entry[0], entry[1][0], entry[1][1])
+            print >>filtered_csv_file, '{},{},{},{}'.format(entry[0], entry[1][0], entry[1][1], entry[1][2])
              
         filtered_csv_file.close()
         
