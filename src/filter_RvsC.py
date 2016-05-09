@@ -126,26 +126,23 @@ if __name__ == '__main__':
                 type = elements[2].strip()
                 haplotype = elements[3].strip()
 
-                bAdd = True                
-                if elements[2] == 'R':
+                if type == 'R':
                     
                     if haplotype != wildtype:
                         
+                        ## real random
                         for key in bins:
                             if bins[key][2] == wildtype:
                                 ## increment the count of the wild type
                                 bins[key][0] += count
-                                ## don't add the false positive to the output table
-                                bAdd = False
-
-                        ## real random
+                        
+                        ## change the type to C 
                         type = 'C'
-
-                if bAdd:
-                    bins[aa_sequence] = []
-                    bins[aa_sequence].append(int(count))
-                    bins[aa_sequence].append(type)     ## R/C
-                    bins[aa_sequence].append(haplotype)
+                    
+                bins[aa_sequence] = []
+                bins[aa_sequence].append(int(count))
+                bins[aa_sequence].append(type)     ## R/C
+                bins[aa_sequence].append(haplotype)
 
         ## serialize the bins to a CSV file
         print >>sys.stdout, "[----- generating filtered CSV -----]"
