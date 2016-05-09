@@ -107,7 +107,7 @@ if __name__ == '__main__':
         
         ## key ... AA sequence
         ## value ... 
-        ##           [count, 'C'/'R']
+        ##           [count, 'C'/'R', 6-mer]
         bins = {}
         
         with open(csv_filename, 'r') as csvfile:
@@ -126,19 +126,10 @@ if __name__ == '__main__':
                 type = elements[2].strip()
                 haplotype = elements[3].strip()
 
-                if type == 'R':
-                    
-                    if haplotype != wildtype:
-                        
-                        ## real random
-                        for key in bins:
-                            if bins[key][2] == wildtype:
-                                ## increment the count of the wild type
-                                bins[key][0] += count
-                        
-                        ## change the type to C 
-                        type = 'C'
-                    
+                if type == 'R' and haplotype != wildtype:
+                    ## change the type to C 
+                    type = 'C'
+                
                 bins[aa_sequence] = []
                 bins[aa_sequence].append(int(count))
                 bins[aa_sequence].append(type)     ## R/C
