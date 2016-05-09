@@ -122,20 +122,30 @@ if __name__ == '__main__':
                 assert len(elements) == 4
 
                 aa_sequence = elements[0].strip()
-                count = elements[1].strip()
+                count = int(elements[1].strip())
                 type = elements[2].strip()
                 haplotype = elements[3].strip()
-                
+
+                bAdd = True                
                 if elements[2] == 'R':
                     
                     if haplotype != wildtype:
+                        
+                        for key in bins:
+                            if bins[key][2] == wildtype:
+                                ## increment the count of the wild type
+                                bins[key][0] += count
+                                ## don't add the false positive to the output table
+                                bAdd = False
+
                         ## real random
                         type = 'C'
 
-                bins[aa_sequence] = []
-                bins[aa_sequence].append(int(count))
-                bins[aa_sequence].append(type)     ## R/C
-                bins[aa_sequence].append(haplotype)
+                if bAdd:
+                    bins[aa_sequence] = []
+                    bins[aa_sequence].append(int(count))
+                    bins[aa_sequence].append(type)     ## R/C
+                    bins[aa_sequence].append(haplotype)
 
         ## serialize the bins to a CSV file
         print >>sys.stdout, "[----- generating filtered CSV -----]"
@@ -143,7 +153,7 @@ if __name__ == '__main__':
         filtered_csv_file = open('../results/{}.filtered.csv'.format(library), 'w')
 
         ## write header
-        print >>filtered_csv_file, '6-mer,Count,Random_mutagenesis/Combinatorial'
+        print >>filtered_csv_file, 'Sequence,Count,Random_mutagenesis/Combinatorial,6-mer'
 
         sorted_bins = sorted(bins.items(), key=lambda x:x[1][0], reverse=True)
         
